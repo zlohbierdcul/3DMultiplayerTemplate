@@ -59,6 +59,12 @@ alignment = 1
 layout_mode = 2
 text = "Host"
 
+[node name="OnlineId" type="Label" parent="Menu/VBoxContainer" unique_id=1271019315]
+layout_mode = 2
+
+[node name="HostOnlineId" type="LineEdit" parent="Menu/VBoxContainer" unique_id=1150320923]
+layout_mode = 2
+
 [node name="Join" type="Button" parent="Menu/VBoxContainer" unique_id=910523245]
 layout_mode = 2
 text = "Join"

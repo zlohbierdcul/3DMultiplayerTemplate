@@ -3,27 +3,47 @@ extends Node
 var _loading_scene := preload("res://scenes/ui/loading.tscn")
 var _active_loading_scene
 
-var _enet_network := preload("res://scenes/network/enet_network.tscn")
-
 var is_hosting_game := false
+
+const SERVER_PORT := 9998
+
+@onready var peer: NodeTunnelPeer = NodeTunnelPeer.new()
+
+func _ready() -> void:
+	peer.error.connect(
+		func(error_msg):
+			push_error("NodeTunnel Error: ", error_msg)
+	)
+	
+	peer.connect_to_relay("eu_central.nodetunnel.io:8080", "yl7ubgct9zax5n4")
+	print("Connected to Relay!")
+	multiplayer.multiplayer_peer = peer
+	print("Authenticating ...")
+	await peer.authenticated
+	print("Authenticated")
 
 func host_game() -> void:
 	print("[NetworkManager] Hosting Game ...")
 	show_loading()
-	is_hosting_game = true
-	var active_network = _enet_network.instantiate() as ENetNetwork
-	add_child(active_network)
 	
-	active_network.create_server_peer()
+	print("creating room")
+	peer.host_room(true, "My Test Room")
+	await peer.room_connected
+	
+	DisplayServer.clipboard_set(peer.room_id)
+	print("[NetworkManager] Created Room with ID %s" % str(peer.room_id))
+	
+	is_hosting_game = true
+	
 
-func join_game() -> void:
+func join_game(id) -> void:
 	print("[NetworkManager] Joining Game ...")
 	show_loading()
 	
-	var active_network = _enet_network.instantiate() as ENetNetwork
-	add_child(active_network)
+	peer.join_room(id)
 	
-	active_network.create_client_peer()
+	await peer.room_connected
+	print("[NetworkManager] Joined Room with ID %s" % str(peer.room_id))
 
 func show_loading() -> void:
 	print("[NetworkManager] Showing Loading Screen ...")

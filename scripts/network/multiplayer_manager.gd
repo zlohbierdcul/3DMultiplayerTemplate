@@ -7,7 +7,7 @@ var _multiplayer_scene = preload("res://scenes/player/player.tscn")
 var _players_in_game: Dictionary = {}
 
 func _ready() -> void:
-	
+	print(NetworkManager.is_hosting_game)
 	if NetworkManager.is_hosting_game:
 		multiplayer.peer_connected.connect(_client_connected)
 		multiplayer.peer_disconnected.connect(_client_disconnected)

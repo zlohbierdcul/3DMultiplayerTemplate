@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 NetworkManager="*uid://c3ywc37jx4baf"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/nodetunnel/plugin.cfg")
+
 [input]
 
 move_left={

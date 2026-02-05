@@ -13,9 +13,9 @@ class_name CameraInput extends Node3D
 var relative_cam := 0.0
 
 func _ready() -> void:
-	
 	if multiplayer.get_unique_id() == owner.name.to_int():
 		camera.current = true
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	else:
 		camera.current = false
 

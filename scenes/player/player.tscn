@@ -24,6 +24,9 @@ height = 1.8
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_u8vuu"]
 height = 1.8
 
+[sub_resource type="BoxMesh" id="BoxMesh_fm80t"]
+size = Vector3(1, 0.1, 0.1)
+
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_h17s1"]
 properties/0/path = NodePath(".:input_dir")
 properties/0/spawn = true
@@ -32,17 +35,20 @@ properties/1/path = NodePath(".:jump_input")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[node name="Player" type="CharacterBody3D" unique_id=1452746167 node_paths=PackedStringArray("_player_input")]
+[node name="Player" type="CharacterBody3D" unique_id=1452746167 node_paths=PackedStringArray("_player_controller", "_player_input", "_camera_input")]
 script = ExtResource("1_3vyb7")
+_player_controller = NodePath("PlayerController")
 _player_input = NodePath("PlayerInput")
+_camera_input = NodePath("CameraInput")
 
 [node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=616799873]
 replication_config = SubResource("SceneReplicationConfig_5gtgg")
 
-[node name="PlayerController" parent="." unique_id=840337290 node_paths=PackedStringArray("_player_ref", "_camera_input", "_player_input") instance=ExtResource("2_fm80t")]
+[node name="PlayerController" parent="." unique_id=840337290 node_paths=PackedStringArray("_player_ref", "_camera_input", "_player_input", "_player_model") instance=ExtResource("2_fm80t")]
 _player_ref = NodePath("..")
 _camera_input = NodePath("../CameraInput")
 _player_input = NodePath("../PlayerInput")
+_player_model = NodePath("../MeshInstance3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1214498127]
 shape = SubResource("CapsuleShape3D_u8vuu")
@@ -50,7 +56,12 @@ shape = SubResource("CapsuleShape3D_u8vuu")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=362274908]
 mesh = SubResource("CapsuleMesh_u8vuu")
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MeshInstance3D" unique_id=937778310]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25048077, -0.45504123)
+mesh = SubResource("BoxMesh_fm80t")
+
 [node name="CameraInput" parent="." unique_id=1822917750 instance=ExtResource("2_je7p5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.56322443, 0)
 
 [node name="PlayerInput" type="Node" parent="." unique_id=1500758025]
 script = ExtResource("10_h17s1")
