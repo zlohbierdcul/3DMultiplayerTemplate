@@ -1,3 +1,29 @@
 [gd_scene format=3 uid="uid://bkwjgyuyd31k"]
 
-[node name="CameraInput" type="Node3D" unique_id=1822917750]
+[ext_resource type="Script" uid="uid://cpovcwqml8f68" path="res://scripts/player/camera_input.gd" id="1_rew3i"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rew3i"]
+properties/0/path = NodePath("CameraMount:rotation")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:relative_cam")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("CameraRotation:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[node name="CameraInput" type="Node3D" unique_id=1822917750 node_paths=PackedStringArray("camera", "camera_mount", "camera_rot")]
+script = ExtResource("1_rew3i")
+camera = NodePath("CameraMount/CameraRotation/Camera3D")
+camera_mount = NodePath("CameraMount")
+camera_rot = NodePath("CameraMount/CameraRotation")
+
+[node name="CameraSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=110174390]
+replication_config = SubResource("SceneReplicationConfig_rew3i")
+
+[node name="CameraMount" type="Node3D" parent="." unique_id=1549919837]
+
+[node name="CameraRotation" type="Node3D" parent="CameraMount" unique_id=1646849911]
+
+[node name="Camera3D" type="Camera3D" parent="CameraMount/CameraRotation" unique_id=1018850196]

@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://bg6ikm62en6qv"]
 
 [ext_resource type="Script" uid="uid://eowj23ka10u2" path="res://scripts/player/player.gd" id="1_3vyb7"]
+[ext_resource type="PackedScene" uid="uid://bkod35ilixopq" path="res://scenes/player/player_controller.tscn" id="2_fm80t"]
 [ext_resource type="PackedScene" uid="uid://bkwjgyuyd31k" path="res://scenes/player/camera_input.tscn" id="2_je7p5"]
 [ext_resource type="Script" uid="uid://cxtph77ba5puu" path="res://scripts/player/state_machine/states/idle_state.gd" id="2_smehm"]
 [ext_resource type="Script" uid="uid://bq7guucc5od5p" path="res://scripts/player/state_machine/state_machine.gd" id="2_ur7pv"]
-[ext_resource type="Script" uid="uid://cpovcwqml8f68" path="res://scripts/player/camera_input.gd" id="3_fm80t"]
 [ext_resource type="Script" uid="uid://x8ttxtvp5lwx" path="res://scripts/player/state_machine/states/walking_state.gd" id="3_ur7pv"]
 [ext_resource type="Script" uid="uid://crro15ia44qv4" path="res://scripts/player/state_machine/states/running_state.gd" id="4_y4r1p"]
 [ext_resource type="Script" uid="uid://7gwne2pnfd8a" path="res://scripts/player/state_machine/states/jumping_state.gd" id="5_d2wvv"]
@@ -39,19 +39,24 @@ _player_input = NodePath("PlayerInput")
 [node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=616799873]
 replication_config = SubResource("SceneReplicationConfig_5gtgg")
 
+[node name="PlayerController" parent="." unique_id=840337290 node_paths=PackedStringArray("_player_ref", "_camera_input", "_player_input") instance=ExtResource("2_fm80t")]
+_player_ref = NodePath("..")
+_camera_input = NodePath("../CameraInput")
+_player_input = NodePath("../PlayerInput")
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1214498127]
 shape = SubResource("CapsuleShape3D_u8vuu")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=362274908]
 mesh = SubResource("CapsuleMesh_u8vuu")
 
-[node name="CameraInput" parent="." unique_id=1822917750 node_paths=PackedStringArray("camera") instance=ExtResource("2_je7p5")]
-transform = Transform3D(1, 0, 0, 0, 0.9774859, 0.21100067, 0, -0.21100067, 0.9774859, 0, 1.6685355, 2.0357676)
-script = ExtResource("3_fm80t")
-camera = NodePath("Camera3D")
+[node name="CameraInput" parent="." unique_id=1822917750 instance=ExtResource("2_je7p5")]
 
-[node name="Camera3D" type="Camera3D" parent="CameraInput" unique_id=1328770618]
-transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 0, -0.06774247, 0.31382537)
+[node name="PlayerInput" type="Node" parent="." unique_id=1500758025]
+script = ExtResource("10_h17s1")
+
+[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="PlayerInput" unique_id=950691611]
+replication_config = SubResource("SceneReplicationConfig_h17s1")
 
 [node name="StateMachine" type="Node" parent="." unique_id=494668050]
 script = ExtResource("2_ur7pv")
@@ -76,9 +81,3 @@ script = ExtResource("7_jej6c")
 
 [node name="Dead" type="Node" parent="StateMachine" unique_id=1623605411]
 script = ExtResource("8_f1ej7")
-
-[node name="PlayerInput" type="Node" parent="." unique_id=1500758025]
-script = ExtResource("10_h17s1")
-
-[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="PlayerInput" unique_id=950691611]
-replication_config = SubResource("SceneReplicationConfig_h17s1")
