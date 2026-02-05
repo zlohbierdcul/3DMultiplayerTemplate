@@ -1,0 +1,84 @@
+[gd_scene format=3 uid="uid://bg6ikm62en6qv"]
+
+[ext_resource type="Script" uid="uid://eowj23ka10u2" path="res://scripts/player/player.gd" id="1_3vyb7"]
+[ext_resource type="PackedScene" uid="uid://bkwjgyuyd31k" path="res://scenes/player/camera_input.tscn" id="2_je7p5"]
+[ext_resource type="Script" uid="uid://cxtph77ba5puu" path="res://scripts/player/state_machine/states/idle_state.gd" id="2_smehm"]
+[ext_resource type="Script" uid="uid://bq7guucc5od5p" path="res://scripts/player/state_machine/state_machine.gd" id="2_ur7pv"]
+[ext_resource type="Script" uid="uid://cpovcwqml8f68" path="res://scripts/player/camera_input.gd" id="3_fm80t"]
+[ext_resource type="Script" uid="uid://x8ttxtvp5lwx" path="res://scripts/player/state_machine/states/walking_state.gd" id="3_ur7pv"]
+[ext_resource type="Script" uid="uid://crro15ia44qv4" path="res://scripts/player/state_machine/states/running_state.gd" id="4_y4r1p"]
+[ext_resource type="Script" uid="uid://7gwne2pnfd8a" path="res://scripts/player/state_machine/states/jumping_state.gd" id="5_d2wvv"]
+[ext_resource type="Script" uid="uid://ti0qksa6saef" path="res://scripts/player/state_machine/states/crouching_state.gd" id="6_3v2ag"]
+[ext_resource type="Script" uid="uid://cp83dysju7ygh" path="res://scripts/player/state_machine/states/sliding_state.gd" id="7_jej6c"]
+[ext_resource type="Script" uid="uid://bqaypkirba88a" path="res://scripts/player/state_machine/states/dead_state.gd" id="8_f1ej7"]
+[ext_resource type="Script" uid="uid://bewbcpd8kqgrw" path="res://scripts/player/player_input.gd" id="10_h17s1"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5gtgg"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_u8vuu"]
+height = 1.8
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_h17s1"]
+properties/0/path = NodePath(".:input_dir")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:jump_input")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Player" type="CharacterBody3D" unique_id=1452746167 node_paths=PackedStringArray("_player_input")]
+script = ExtResource("1_3vyb7")
+_player_input = NodePath("PlayerInput")
+
+[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=616799873]
+replication_config = SubResource("SceneReplicationConfig_5gtgg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1214498127]
+shape = SubResource("CapsuleShape3D_u8vuu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=362274908]
+mesh = SubResource("CapsuleMesh_u8vuu")
+
+[node name="CameraInput" parent="." unique_id=1822917750 node_paths=PackedStringArray("camera") instance=ExtResource("2_je7p5")]
+transform = Transform3D(1, 0, 0, 0, 0.9774859, 0.21100067, 0, -0.21100067, 0.9774859, 0, 1.6685355, 2.0357676)
+script = ExtResource("3_fm80t")
+camera = NodePath("Camera3D")
+
+[node name="Camera3D" type="Camera3D" parent="CameraInput" unique_id=1328770618]
+transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 0, -0.06774247, 0.31382537)
+
+[node name="StateMachine" type="Node" parent="." unique_id=494668050]
+script = ExtResource("2_ur7pv")
+
+[node name="Idle" type="Node" parent="StateMachine" unique_id=2006936466]
+script = ExtResource("2_smehm")
+
+[node name="Walking" type="Node" parent="StateMachine" unique_id=29649066]
+script = ExtResource("3_ur7pv")
+
+[node name="Running" type="Node" parent="StateMachine" unique_id=823295371]
+script = ExtResource("4_y4r1p")
+
+[node name="Jumping" type="Node" parent="StateMachine" unique_id=1741949207]
+script = ExtResource("5_d2wvv")
+
+[node name="Crouching" type="Node" parent="StateMachine" unique_id=1898515244]
+script = ExtResource("6_3v2ag")
+
+[node name="Sliding" type="Node" parent="StateMachine" unique_id=1197961916]
+script = ExtResource("7_jej6c")
+
+[node name="Dead" type="Node" parent="StateMachine" unique_id=1623605411]
+script = ExtResource("8_f1ej7")
+
+[node name="PlayerInput" type="Node" parent="." unique_id=1500758025]
+script = ExtResource("10_h17s1")
+
+[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="PlayerInput" unique_id=950691611]
+replication_config = SubResource("SceneReplicationConfig_h17s1")

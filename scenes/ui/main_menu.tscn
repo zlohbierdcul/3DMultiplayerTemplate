@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://bsnlwoqq7dp2o"]
+
+[ext_resource type="Script" uid="uid://d1feha84g2g3s" path="res://scripts/main_menu.gd" id="1_sl1te"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oo0fn"]
+
+[node name="MainMenu" type="Control" unique_id=1682364537]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sl1te")
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" type="Panel" parent="." unique_id=515611420]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BG" type="ColorRect" parent="Panel" unique_id=949332624]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.07391418, 0.16539335, 0.18920943, 1)
+
+[node name="Menu" type="Panel" parent="." unique_id=1053660755]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -150.0
+offset_right = 150.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_oo0fn")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu" unique_id=1085991809]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Host" type="Button" parent="Menu/VBoxContainer" unique_id=1327824143]
+layout_mode = 2
+text = "Host"
+
+[node name="Join" type="Button" parent="Menu/VBoxContainer" unique_id=910523245]
+layout_mode = 2
+text = "Join"
+
+[node name="Exit" type="Button" parent="Menu/VBoxContainer" unique_id=1647062696]
+layout_mode = 2
+text = "Exit"
+
+[connection signal="pressed" from="Menu/VBoxContainer/Host" to="." method="host"]
+[connection signal="pressed" from="Menu/VBoxContainer/Join" to="." method="join"]
+[connection signal="pressed" from="Menu/VBoxContainer/Exit" to="." method="exit"]

@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://b4ecuqc2jtqpe"]
+
+[ext_resource type="PackedScene" uid="uid://bsh8iipl7y1rx" path="res://scenes/network/multiplayer_manager.tscn" id="1_sul5r"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sul5r"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_7h61r"]
+sky_material = SubResource("ProceduralSkyMaterial_sul5r")
+
+[sub_resource type="Environment" id="Environment_0sr1o"]
+background_mode = 2
+sky = SubResource("Sky_7h61r")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="Game" type="Node3D" unique_id=60377868]
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=799127507]
+_spawnable_scenes = PackedStringArray("uid://bg6ikm62en6qv")
+spawn_path = NodePath("../World/PlayerSpawnPoint")
+
+[node name="MulitplayerManager" parent="." unique_id=421224836 node_paths=PackedStringArray("_player_spawnpoint") instance=ExtResource("1_sul5r")]
+_player_spawnpoint = NodePath("../World/PlayerSpawnPoint")
+
+[node name="World" type="Node3D" parent="." unique_id=1637577970]
+
+[node name="Atmosphere" type="Node3D" parent="World" unique_id=1397291357]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World/Atmosphere" unique_id=1231798650]
+environment = SubResource("Environment_0sr1o")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World/Atmosphere" unique_id=1542425373]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="MapSpawnPoint" type="Node3D" parent="World" unique_id=1463219977]
+
+[node name="PlayerSpawnPoint" type="Node3D" parent="World" unique_id=175529384]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=445285293]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2771597, 0)
+use_collision = true
+size = Vector3(10, 0.5, 10)
