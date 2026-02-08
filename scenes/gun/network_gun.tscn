@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://bqk6wsgw21yeb"]
+
+[ext_resource type="Script" uid="uid://csy1xatbmihks" path="res://scenes/gun/network_gun.gd" id="1_k1tjs"]
+[ext_resource type="Script" uid="uid://dfeatf72b8lkr" path="res://scripts/gun/bullet_hole.gd" id="1_uub4c"]
+[ext_resource type="Texture2D" uid="uid://dc04kg3trks5r" path="res://assets/gun/bullet_hole.png" id="2_1ayxn"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k1tjs"]
+albedo_texture = ExtResource("2_1ayxn")
+
+[node name="NetworkGun" type="Node3D" unique_id=855387136]
+script = ExtResource("1_k1tjs")
+
+[node name="BulletHole" type="Node3D" parent="." unique_id=1245105293]
+script = ExtResource("1_uub4c")
+material = SubResource("StandardMaterial3D_k1tjs")

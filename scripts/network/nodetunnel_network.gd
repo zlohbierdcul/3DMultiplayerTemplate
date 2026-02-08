@@ -7,7 +7,7 @@ func create_server_peer():
 	print("[ENetNetwork] Creating NodeTunnelPeer Server.")
 	var nodetunnel_network_peer := NodeTunnelPeer.new()
 	multiplayer.multiplayer_peer = nodetunnel_network_peer
-	nodetunnel_network_peer.connect_to_relay("relay.nodetunnel.io", SERVER_PORT)
+	#nodetunnel_network_peer.connect_to_relay("relay.nodetunnel.io", SERVER_PORT)
 	await nodetunnel_network_peer.relay_connected
 	print("[ENetNetwork] NodeTunnelPeer created!")
 	

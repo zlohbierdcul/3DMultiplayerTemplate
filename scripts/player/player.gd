@@ -4,8 +4,10 @@ class_name Player extends CharacterBody3D
 @export var _player_input: PlayerInput
 @export var _camera_input: CameraInput
 
-const SPEED = 5.0
-const JUMP_VELOCITY = 4.5
+const ROTATION_SPEED := 40.0
+const SPEED := 5.0
+const SPEED_MULTIPLIER := 2.3
+const JUMP_VELOCITY := 4.5
 
 var orientation := Transform3D()
 
