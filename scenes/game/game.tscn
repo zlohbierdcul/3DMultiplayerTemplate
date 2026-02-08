@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://b4ecuqc2jtqpe"]
 
+[ext_resource type="PackedScene" uid="uid://ci6ax4vuptjjr" path="res://levels/aim_lego.tscn" id="1_0sr1o"]
 [ext_resource type="Script" uid="uid://bvy3twysr1nvc" path="res://scripts/game/player_spawner.gd" id="2_7h61r"]
 [ext_resource type="PackedScene" uid="uid://bg6ikm62en6qv" path="res://scenes/player/player.tscn" id="3_0sr1o"]
 
@@ -16,9 +17,6 @@ sky = SubResource("Sky_7h61r")
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7h61r"]
-albedo_color = Color(0, 0.19215687, 0, 1)
-
 [node name="Game" type="Node" unique_id=1022402815]
 
 [node name="Environment" type="Node" parent="." unique_id=1753665511]
@@ -32,48 +30,21 @@ shadow_enabled = true
 
 [node name="Map" type="Node" parent="." unique_id=530805541]
 
-[node name="CSGCombiner3D" type="CSGCombiner3D" parent="Map" unique_id=2075562619]
-use_collision = true
-
-[node name="Floor" type="CSGBox3D" parent="Map/CSGCombiner3D" unique_id=445285293]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
-use_collision = true
-size = Vector3(50, 0.5, 50)
-material = SubResource("StandardMaterial3D_7h61r")
-
-[node name="Wall" type="CSGBox3D" parent="Map/CSGCombiner3D" unique_id=64188593]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 1, 0)
-use_collision = true
-size = Vector3(1, 4, 50)
-
-[node name="Wall2" type="CSGBox3D" parent="Map/CSGCombiner3D" unique_id=730585790]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 1, 0)
-use_collision = true
-size = Vector3(1, 4, 50)
-
-[node name="Wall3" type="CSGBox3D" parent="Map/CSGCombiner3D" unique_id=982386328]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 25)
-use_collision = true
-size = Vector3(50, 4, 1)
-
-[node name="Wall4" type="CSGBox3D" parent="Map/CSGCombiner3D" unique_id=571129677]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -25)
-use_collision = true
-size = Vector3(50, 4, 1)
+[node name="AimLego" parent="Map" unique_id=1510654233 instance=ExtResource("1_0sr1o")]
 
 [node name="SpawnMarker" type="Node" parent="." unique_id=1658489978]
 
 [node name="Marker3D" type="Marker3D" parent="SpawnMarker" unique_id=1450401968]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.9363537, 1.9622297, 10)
 
 [node name="Marker3D2" type="Marker3D" parent="SpawnMarker" unique_id=1045646345]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5125637, 1.5, -12.814428)
 
 [node name="Marker3D3" type="Marker3D" parent="SpawnMarker" unique_id=2061979763]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.6026306, 1.9781141, 10)
 
 [node name="Marker3D4" type="Marker3D" parent="SpawnMarker" unique_id=211435290]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.394538, 1.5, -13.214813)
 
 [node name="Network" type="Node" parent="." unique_id=371718243]
 

@@ -1,8 +1,14 @@
 extends RewindableState
 
-@export var character: CharacterBody3D
+@export var character: Player
 @export var input: PlayerInput
-@export var speed = 5.0
+@export var speed = 2.5
+
+func enter(previous_state: RewindableState, tick: int) -> void:
+	character.head.position.y -= 0.5
+
+func exit(next_state: RewindableState, tick: int) -> void:
+	character.head.position.y += 0.5
 
 func tick(delta, tick, is_fresh):
 	var input_dir = input.movement
@@ -24,7 +30,5 @@ func tick(delta, tick, is_fresh):
 		state_machine.transition(&"Jump")
 	elif input.run:
 		state_machine.transition(&"Run")
-	elif input.crouch:
-		state_machine.transition(&"Crouch")
-	elif input_dir == Vector3.ZERO:
+	elif not input.crouch:
 		state_machine.transition(&"Idle")

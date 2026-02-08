@@ -12,6 +12,7 @@ var mouse_rotation := Vector2.ZERO
 var jump := false
 var run := false
 var fire := false
+var crouch := false
 
 var override_mouse := false
 var is_setup := false
@@ -45,6 +46,7 @@ func _gather():
 	jump = Input.is_action_pressed("jump")
 	fire = Input.is_action_pressed("attack")
 	run = Input.is_action_pressed("sprint")
+	crouch = Input.is_action_pressed("crouch")
 	
 	if override_mouse:
 		look_angle = Vector2.ZERO

@@ -15,3 +15,5 @@ func tick(delta, tick, is_fresh):
 			state_machine.transition(&"Move")
 	elif input.jump:
 		state_machine.transition(&"Jump")
+	elif input.crouch:
+		state_machine.transition(&"Crouch")

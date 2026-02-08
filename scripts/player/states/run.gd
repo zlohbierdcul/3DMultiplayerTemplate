@@ -25,5 +25,7 @@ func tick(delta, tick, is_fresh):
 	
 	if input.jump:
 		state_machine.transition(&"Jump")
+	if input.crouch:
+		state_machine.transition(&"Crouch")
 	elif input_dir == Vector3.ZERO:
 		state_machine.transition(&"Idle")
