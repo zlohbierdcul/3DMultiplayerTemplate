@@ -11,8 +11,8 @@ func _ready() -> void:
 
 func host():
 	print("[MainMenu] Host Game")
+	await get_tree().call_deferred(&"change_scene_to_packed", preload(GAME_SCENE))
 	await NetworkManager.host_game()
-	get_tree().call_deferred(&"change_scene_to_packed", preload(GAME_SCENE))
 	
 func join():
 	print("[MainMenu] Join Game %s")

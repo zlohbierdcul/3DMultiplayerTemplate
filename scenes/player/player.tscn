@@ -3,9 +3,12 @@
 [ext_resource type="Script" uid="uid://eowj23ka10u2" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="PackedScene" uid="uid://bkod35ilixopq" path="res://scenes/player/player_controller.tscn" id="2_fm80t"]
 [ext_resource type="PackedScene" uid="uid://bkwjgyuyd31k" path="res://scenes/player/camera_input.tscn" id="2_je7p5"]
+[ext_resource type="PackedScene" uid="uid://bqk6wsgw21yeb" path="res://scenes/gun/network_gun.tscn" id="2_myrg7"]
 [ext_resource type="Script" uid="uid://cxtph77ba5puu" path="res://scripts/player/state_machine/states/idle_state.gd" id="2_smehm"]
 [ext_resource type="Script" uid="uid://bq7guucc5od5p" path="res://scripts/player/state_machine/state_machine.gd" id="2_ur7pv"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="3_myrg7"]
 [ext_resource type="Script" uid="uid://x8ttxtvp5lwx" path="res://scripts/player/state_machine/states/walking_state.gd" id="3_ur7pv"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="4_myrg7"]
 [ext_resource type="Script" uid="uid://crro15ia44qv4" path="res://scripts/player/state_machine/states/running_state.gd" id="4_y4r1p"]
 [ext_resource type="Script" uid="uid://7gwne2pnfd8a" path="res://scripts/player/state_machine/states/jumping_state.gd" id="5_d2wvv"]
 [ext_resource type="Script" uid="uid://ti0qksa6saef" path="res://scripts/player/state_machine/states/crouching_state.gd" id="6_3v2ag"]
@@ -15,9 +18,15 @@
 [ext_resource type="Texture2D" uid="uid://dnm4qvou8cofh" path="res://assets/player/crosshair.png" id="13_gx1jg"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5gtgg"]
-properties/0/path = NodePath(".:position")
+properties/0/path = NodePath(".:health")
 properties/0/spawn = true
-properties/0/replication_mode = 1
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:death_tick")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:respawn_position")
+properties/2/spawn = true
+properties/2/replication_mode = 2
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
 height = 1.8
@@ -39,11 +48,32 @@ properties/2/path = NodePath(".:run_input")
 properties/2/spawn = true
 properties/2/replication_mode = 1
 
-[node name="Player" type="CharacterBody3D" unique_id=1452746167 node_paths=PackedStringArray("_player_controller", "_player_input", "_camera_input")]
+[node name="Player" type="CharacterBody3D" unique_id=1452746167 node_paths=PackedStringArray("input", "tick_interpolator", "head")]
 script = ExtResource("1_3vyb7")
-_player_controller = NodePath("PlayerController")
-_player_input = NodePath("PlayerInput")
-_camera_input = NodePath("CameraInput")
+input = NodePath("PlayerInput")
+tick_interpolator = NodePath("TickInterpolator")
+head = NodePath("Head")
+
+[node name="Head" type="Node3D" parent="." unique_id=2096337798]
+
+[node name="Camera3D" type="Camera3D" parent="Head" unique_id=1953381354]
+
+[node name="BigGun" type="Node3D" parent="Head" unique_id=987308342]
+
+[node name="NetworkGun" parent="Head" unique_id=855387136 node_paths=PackedStringArray("input") instance=ExtResource("2_myrg7")]
+input = NodePath("../../PlayerInput")
+
+[node name="TickInterpolator" type="Node" parent="." unique_id=291797288 node_paths=PackedStringArray("root")]
+script = ExtResource("3_myrg7")
+root = NodePath("..")
+properties = Array[String]([":transform", "Head:transform"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
+
+[node name="RollbackSynchronizer" type="Node" parent="." unique_id=1254284330 node_paths=PackedStringArray("root")]
+script = ExtResource("4_myrg7")
+root = NodePath("..")
+state_properties = Array[String]([":transform", ":velocity", ":dis_respawn", "Head:transform"])
+metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=616799873]
 replication_config = SubResource("SceneReplicationConfig_5gtgg")
@@ -67,8 +97,12 @@ mesh = SubResource("BoxMesh_fm80t")
 [node name="CameraInput" parent="." unique_id=1822917750 instance=ExtResource("2_je7p5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.56322443, 0)
 
-[node name="PlayerInput" type="Node" parent="." unique_id=1500758025]
+[node name="PlayerInput" type="Node" parent="." unique_id=1500758025 node_paths=PackedStringArray("camera", "big_arm", "hud")]
 script = ExtResource("10_h17s1")
+mouse_sensitivity = 0.005
+camera = NodePath("../Head/Camera3D")
+big_arm = NodePath("../Head/BigGun")
+hud = NodePath("../Control")
 
 [node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="PlayerInput" unique_id=950691611]
 replication_config = SubResource("SceneReplicationConfig_h17s1")

@@ -19,7 +19,7 @@ var pool := NodePool.new()
 
 func _ready():
 	pool.pool_limit = instance_limit
-	pool.spawn_root = get_tree().root.get_node("multiplayer-fps/Map/StaticBody3D")
+	pool.spawn_root = get_tree().root.get_node("Game/Map/CSGBox3D")
 	
 	var decal_node: Decal = Decal.new()
 	decal_node.cull_mask = decal_mask

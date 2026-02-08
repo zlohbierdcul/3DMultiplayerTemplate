@@ -6,7 +6,7 @@ extends NetworkWeaponHitscan3D
 @export_category("Settings")
 @export var fire_cooldown: float = 0.25
 
-@onready var sound: AudioStreamPlayer3D = $AudioStreamPlayer3D
+#@onready var sound: AudioStreamPlayer3D = $AudioStreamPlayer3D
 @onready var bullethole: BulletHole = $BulletHole
 
 var last_fire: int = -1
@@ -21,7 +21,8 @@ func _can_peer_use(peer_id: int) -> bool:
 	return peer_id == input.get_multiplayer_authority()
 
 func _on_fire():
-	sound.play()
+	#sound.play()
+	print("Fire!")
 	
 func _after_fire():
 	last_fire = NetworkTime.tick
@@ -32,5 +33,5 @@ func _on_hit(result: Dictionary):
 		result.collider.damage()
 	
 func _tick(_delta: float, _t: int):
-	if input.fire_input:
+	if input.fire:
 		fire()

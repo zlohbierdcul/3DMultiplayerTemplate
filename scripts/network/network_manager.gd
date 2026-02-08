@@ -17,7 +17,7 @@ func _ready() -> void:
 	
 	peer.connect_to_relay("eu_central.nodetunnel.io:8080", "yl7ubgct9zax5n4")
 	print("Connected to Relay!")
-	multiplayer.multiplayer_peer = peer
+	get_tree().get_multiplayer().multiplayer_peer = peer
 	print("Authenticating ...")
 	await peer.authenticated
 	print("Authenticated")
@@ -26,7 +26,6 @@ func host_game() -> void:
 	print("[NetworkManager] Hosting Game ...")
 	show_loading()
 	
-	print("creating room")
 	peer.host_room(true, "My Test Room")
 	await peer.room_connected
 	
@@ -34,7 +33,10 @@ func host_game() -> void:
 	print("[NetworkManager] Created Room with ID %s" % str(peer.room_id))
 	
 	is_hosting_game = true
+	get_tree().get_multiplayer().server_relay = true
 	
+	NetworkTime.start()
+	hide_loading()
 
 func join_game(id) -> void:
 	print("[NetworkManager] Joining Game ...")
@@ -44,6 +46,8 @@ func join_game(id) -> void:
 	
 	await peer.room_connected
 	print("[NetworkManager] Joined Room with ID %s" % str(peer.room_id))
+	
+	hide_loading()
 
 func show_loading() -> void:
 	print("[NetworkManager] Showing Loading Screen ...")
@@ -52,6 +56,6 @@ func show_loading() -> void:
 
 
 func hide_loading() -> void:
-	print("[NetworkManager] Showing Loading Screen ...")
+	print("[NetworkManager] Hiding Loading Screen ...")
 	if _active_loading_scene != null:
 		_active_loading_scene.queue_free()

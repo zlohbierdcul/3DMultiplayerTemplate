@@ -1,13 +1,59 @@
-class_name PlayerInput extends Node
+class_name PlayerInput extends BaseNetInput
 
-var input_dir := Vector2.ZERO
-var jump_input := 0.0
-var run_input := 0.0
-var fire_input := 0.0
+@export var mouse_sensitivity := 1.0
+@export var camera : Camera3D
+@export var big_arm : Node3D
+@export var hud : Control
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(_delta: float) -> void:
-	input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backwards")
-	jump_input = Input.get_action_strength("jump")
-	run_input = Input.get_action_strength("sprint")
-	fire_input = Input.get_action_strength("attack")
+var movement := Vector3.ZERO
+var look_angle := Vector2.ZERO
+var mouse_rotation := Vector2.ZERO
+var jump := false
+var run := false
+var fire := false
+
+var override_mouse := false
+var is_setup := false
+
+func _notification(what):
+	if what == NOTIFICATION_WM_WINDOW_FOCUS_IN:
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		override_mouse = false
+		
+func _input(event: InputEvent) -> void:
+	if !is_multiplayer_authority(): return
+	
+	if event is InputEventMouseMotion:
+		mouse_rotation.y += event.relative.x * mouse_sensitivity
+		mouse_rotation.x += event.relative.y * mouse_sensitivity
+		
+	if event.is_action_pressed("exit"):
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		override_mouse = true
+
+	if !is_setup:
+		setup()
+	
+	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
+	var mx = Input.get_axis("move_left", "move_right")
+	var mz = Input.get_axis("move_forward", "move_backwards")
+	movement = Vector3(mx, 0, mz)
+
+	jump = Input.is_action_pressed("jump")
+	fire = Input.is_action_pressed("attack")
+	run = Input.is_action_just_pressed("sprint")
+	
+	if override_mouse:
+		look_angle = Vector2.ZERO
+		mouse_rotation = Vector2.ZERO
+	else:
+		look_angle = Vector2(-mouse_rotation.y, -mouse_rotation.x)
+		mouse_rotation = Vector2.ZERO
+
+func setup():
+	is_setup = true
+	camera.current = true
+	big_arm.hide()
+	hud.show()
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)

@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b4ecuqc2jtqpe"]
 
-[ext_resource type="PackedScene" uid="uid://bsh8iipl7y1rx" path="res://scenes/network/multiplayer_manager.tscn" id="1_sul5r"]
+[ext_resource type="Script" uid="uid://bvy3twysr1nvc" path="res://scripts/game/player_spawner.gd" id="2_7h61r"]
+[ext_resource type="PackedScene" uid="uid://bg6ikm62en6qv" path="res://scenes/player/player.tscn" id="3_0sr1o"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sul5r"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -15,31 +16,43 @@ sky = SubResource("Sky_7h61r")
 tonemap_mode = 2
 glow_enabled = true
 
-[node name="Game" type="Node3D" unique_id=60377868]
+[node name="Game" type="Node" unique_id=1022402815]
 
-[node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=799127507]
-_spawnable_scenes = PackedStringArray("uid://bg6ikm62en6qv")
-spawn_path = NodePath("../World/PlayerSpawnPoint")
+[node name="Environment" type="Node" parent="." unique_id=1753665511]
 
-[node name="MulitplayerManager" parent="." unique_id=421224836 node_paths=PackedStringArray("_player_spawnpoint") instance=ExtResource("1_sul5r")]
-_player_spawnpoint = NodePath("../World/PlayerSpawnPoint")
-
-[node name="World" type="Node3D" parent="." unique_id=1637577970]
-
-[node name="Atmosphere" type="Node3D" parent="World" unique_id=1397291357]
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="World/Atmosphere" unique_id=1231798650]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment" unique_id=1231798650]
 environment = SubResource("Environment_0sr1o")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World/Atmosphere" unique_id=1542425373]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment" unique_id=1542425373]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
 
-[node name="MapSpawnPoint" type="Node3D" parent="World" unique_id=1463219977]
+[node name="Map" type="Node" parent="." unique_id=530805541]
 
-[node name="PlayerSpawnPoint" type="Node3D" parent="World" unique_id=175529384]
-
-[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=445285293]
+[node name="CSGBox3D" type="CSGBox3D" parent="Map" unique_id=445285293]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2771597, 0)
 use_collision = true
-size = Vector3(10, 0.5, 10)
+size = Vector3(50, 0.5, 50)
+
+[node name="SpawnMarker" type="Node" parent="." unique_id=1658489978]
+
+[node name="Marker3D" type="Marker3D" parent="SpawnMarker" unique_id=1450401968]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, 10)
+
+[node name="Marker3D2" type="Marker3D" parent="SpawnMarker" unique_id=1045646345]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, -10)
+
+[node name="Marker3D3" type="Marker3D" parent="SpawnMarker" unique_id=2061979763]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, 10)
+
+[node name="Marker3D4" type="Marker3D" parent="SpawnMarker" unique_id=211435290]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, -10)
+
+[node name="Players" type="Node" parent="." unique_id=1188173077]
+
+[node name="Network" type="Node" parent="." unique_id=371718243]
+
+[node name="PlayerSpawner" type="Node" parent="Network" unique_id=1996890934 node_paths=PackedStringArray("spawn_points")]
+script = ExtResource("2_7h61r")
+player_scene = ExtResource("3_0sr1o")
+spawn_points = [NodePath("../../SpawnMarker/Marker3D"), NodePath("../../SpawnMarker/Marker3D2"), NodePath("../../SpawnMarker/Marker3D3"), NodePath("../../SpawnMarker/Marker3D4")]
