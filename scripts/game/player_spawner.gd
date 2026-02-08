@@ -1,6 +1,7 @@
 extends Node
 
 @export var player_scene: PackedScene
+@export var spawn_root: Node
 @export var spawn_points: Array[Marker3D] = []
 
 var avatars: Dictionary = {}
@@ -43,7 +44,7 @@ func _spawn(id: int):
 	var avatar = player_scene.instantiate() as Node
 	avatars[id] = avatar
 	avatar.name += " #%d" % id
-	add_child(avatar)
+	spawn_root.add_child(avatar)
 	avatar.global_position = get_next_spawn_point(id)
 	
 	# Avatar is always owned by server

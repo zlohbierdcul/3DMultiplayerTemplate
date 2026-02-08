@@ -15,4 +15,3 @@ script = ExtResource("1_uub4c")
 material = SubResource("StandardMaterial3D_k1tjs")
 
 [node name="Gun" type="Node3D" parent="." unique_id=1164286613]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.11684044, 0.094031155, -0.2)

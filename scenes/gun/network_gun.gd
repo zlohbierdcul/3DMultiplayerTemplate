@@ -2,17 +2,22 @@ class_name NetworkGun
 extends NetworkWeaponHitscan3D
 
 @export var input: PlayerInput
+@export var gun: MeshInstance3D
 
 @export_category("Settings")
 @export var fire_cooldown: float = 0.25
 
 #@onready var sound: AudioStreamPlayer3D = $AudioStreamPlayer3D
 @onready var bullethole: BulletHole = $BulletHole
+@onready var gun_pos: Node3D = $Gun
 
 var last_fire: int = -1
 
 func _ready():
 	NetworkTime.on_tick.connect(_tick)
+	var tiny_gun = gun.duplicate()
+	tiny_gun.scale = Vector3(0.2, 0.2, 0.2)
+	gun_pos.add_child(tiny_gun)
 
 func _can_fire() -> bool:
 	return NetworkTime.seconds_between(last_fire, NetworkTime.tick) >= fire_cooldown

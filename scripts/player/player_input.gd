@@ -32,6 +32,7 @@ func _input(event: InputEvent) -> void:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		override_mouse = true
 
+func _gather():
 	if !is_setup:
 		setup()
 	
@@ -43,7 +44,7 @@ func _input(event: InputEvent) -> void:
 
 	jump = Input.is_action_pressed("jump")
 	fire = Input.is_action_pressed("attack")
-	run = Input.is_action_just_pressed("sprint")
+	run = Input.is_action_pressed("sprint")
 	
 	if override_mouse:
 		look_angle = Vector2.ZERO
@@ -53,6 +54,7 @@ func _input(event: InputEvent) -> void:
 		mouse_rotation = Vector2.ZERO
 
 func setup():
+	mouse_sensitivity = mouse_sensitivity / 1000
 	is_setup = true
 	camera.current = true
 	big_arm.hide()

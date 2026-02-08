@@ -5,10 +5,14 @@ class_name Player extends CharacterBody3D
 @export var speed := 5.0
 @export var speed_muliplier := 2.3
 
+@export var state_machine: RewindableStateMachine
+
 @onready var input: PlayerInput = $Input
 @onready var tick_interpolator: TickInterpolator = $TickInterpolator
 @onready var head: Node3D = $Head
 @onready var hud: Control = $HUD
+@onready var state_label: Label = $HUD/StateLabel
+@onready var health_bar: ProgressBar = $HUD/HealthBar
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var _logger := NetfoxLogger.new("fps", "Player")
@@ -21,7 +25,12 @@ var respawn_position := Vector3.ZERO
 func _ready():
 	#display_name.text = name
 	#hud.hide()
-
+	
+	state_machine.state = &"Idle"
+	state_machine.on_state_changed.connect(func(_old_state, _new_state):
+		state_label.text = state_machine.state
+	)
+	health_bar.value = health
 	NetworkTime.on_tick.connect(_tick)
 	NetworkTime.after_tick_loop.connect(_after_tick_loop)
 
@@ -44,10 +53,7 @@ func _rollback_tick(delta: float, tick: int, is_fresh: bool) -> void:
 
 	# Gravity
 	_force_update_is_on_floor()
-	if is_on_floor():
-		if input.jump:
-			velocity.y = jump_strength
-	else:
+	if not is_on_floor():
 		velocity.y -= gravity * delta
 
 	# Handle look left and right
@@ -60,21 +66,6 @@ func _rollback_tick(delta: float, tick: int, is_fresh: bool) -> void:
 	head.rotation.z = 0
 	head.rotation.y = 0
 
-	# Apply movement
-	var input_dir = input.movement
-	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.z)).normalized()
-	if direction:
-		velocity.x = direction.x * speed
-		velocity.z = direction.z * speed
-	else:
-		velocity.x = move_toward(velocity.x, 0, speed)
-		velocity.z = move_toward(velocity.z, 0, speed)
-
-	# move_and_slide assumes physics delta
-	# multiplying velocity by NetworkTime.physics_factor compensates for it
-	velocity *= NetworkTime.physics_factor
-	move_and_slide()
-	velocity /= NetworkTime.physics_factor
 
 func _force_update_is_on_floor():
 	var old_velocity = velocity
@@ -86,6 +77,7 @@ func damage():
 	#$HitSFX.play()
 	if is_multiplayer_authority():
 		health -= 34
+		health_bar.value = health
 		_logger.warning("%s HP now at %s", [name, health])
 
 func die():
