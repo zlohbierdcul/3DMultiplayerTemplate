@@ -16,8 +16,8 @@ func host():
 	
 func join():
 	print("[MainMenu] Join Game %s")
-	await NetworkManager.join_game(host_online_id.text)
 	get_tree().call_deferred(&"change_scene_to_packed", preload(GAME_SCENE))
+	await NetworkManager.join_game(host_online_id.text)
 	
 func exit():
 	get_tree().quit(0)

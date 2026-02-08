@@ -1,9 +1,10 @@
 class_name PlayerInput extends BaseNetInput
 
 @export var mouse_sensitivity := 1.0
-@export var camera : Camera3D
 @export var big_arm : Node3D
 @export var hud : Control
+
+@onready var camera : Camera3D = $"../Head/Camera3D"
 
 var movement := Vector3.ZERO
 var look_angle := Vector2.ZERO

@@ -1,14 +1,14 @@
 class_name Player extends CharacterBody3D
 
-@export_category("Dependencies")
-@export var input: PlayerInput
-@export var tick_interpolator: TickInterpolator
-@export var head: Node3D
-
 @export_category("Settings")
 @export var jump_strength := 4.5
 @export var speed := 5.0
 @export var speed_muliplier := 2.3
+
+@onready var input: PlayerInput = $Input
+@onready var tick_interpolator: TickInterpolator = $TickInterpolator
+@onready var head: Node3D = $Head
+@onready var hud: Control = $HUD
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var _logger := NetfoxLogger.new("fps", "Player")
@@ -27,7 +27,7 @@ func _ready():
 
 func _tick(dt: float, tick: int):
 	if health <= 0:
-		$DieSFX.play()
+		#$DieSFX.play()
 		die()
 
 func _after_tick_loop():
@@ -83,7 +83,7 @@ func _force_update_is_on_floor():
 	velocity = old_velocity
 
 func damage():
-	$HitSFX.play()
+	#$HitSFX.play()
 	if is_multiplayer_authority():
 		health -= 34
 		_logger.warning("%s HP now at %s", [name, health])

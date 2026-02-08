@@ -14,22 +14,18 @@ func _ready():
 	NetworkEvents.on_server_stop.connect(_handle_stop)
 
 func _handle_connected(id: int):
-	print("_handle_connected")
 	# Spawn an avatar for us
 	_spawn(id)
 
 func _handle_host():
-	print("_handle_host")
 	# Spawn own avatar on host machine
 	_spawn(1)
 
 func _handle_new_peer(id: int):
-	print("_handle_new_peer")
 	# Spawn an avatar for new player
 	_spawn(id)
 
 func _handle_leave(id: int):
-	print("_handle_leave")
 	if not avatars.has(id):
 		return
 	
@@ -38,14 +34,12 @@ func _handle_leave(id: int):
 	avatars.erase(id)
 
 func _handle_stop():
-	print("_handle_stop")
 	# Remove all avatars on game end
 	for avatar in avatars.values():
 		avatar.queue_free()
 	avatars.clear()
 
 func _spawn(id: int):
-	print("_spawn")
 	var avatar = player_scene.instantiate() as Node
 	avatars[id] = avatar
 	avatar.name += " #%d" % id
@@ -58,7 +52,7 @@ func _spawn(id: int):
 	print("Spawned avatar %s at %s" % [avatar.name, multiplayer.get_unique_id()])
 	
 	# Players's input object is owned by player
-	var input = avatar.find_child("PlayerInput")
+	var input = avatar.find_child("Input")
 	if input != null:
 		input.set_multiplayer_authority(id)
 		print("Set input(%s) ownership to %s" % [input.name, id])

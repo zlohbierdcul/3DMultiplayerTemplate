@@ -3,13 +3,8 @@ extends Node
 var _loading_scene := preload("res://scenes/ui/loading.tscn")
 var _active_loading_scene
 
-var is_hosting_game := false
-
-const SERVER_PORT := 9998
-
-@onready var peer: NodeTunnelPeer = NodeTunnelPeer.new()
-
-func _ready() -> void:
+func _create_nodetunnel_peer() -> NodeTunnelPeer:
+	var peer := NodeTunnelPeer.new()
 	peer.error.connect(
 		func(error_msg):
 			push_error("NodeTunnel Error: ", error_msg)
@@ -20,20 +15,20 @@ func _ready() -> void:
 	get_tree().get_multiplayer().multiplayer_peer = peer
 	print("Authenticating ...")
 	await peer.authenticated
-	print("Authenticated")
+	return peer
 
 func host_game() -> void:
 	print("[NetworkManager] Hosting Game ...")
 	show_loading()
 	
+	var peer := await _create_nodetunnel_peer()
+	
 	peer.host_room(true, "My Test Room")
 	await peer.room_connected
+	print(peer.get_unique_id())
 	
 	DisplayServer.clipboard_set(peer.room_id)
 	print("[NetworkManager] Created Room with ID %s" % str(peer.room_id))
-	
-	is_hosting_game = true
-	get_tree().get_multiplayer().server_relay = true
 	
 	NetworkTime.start()
 	hide_loading()
@@ -41,6 +36,8 @@ func host_game() -> void:
 func join_game(id) -> void:
 	print("[NetworkManager] Joining Game ...")
 	show_loading()
+	
+	var peer := await _create_nodetunnel_peer()
 	
 	peer.join_room(id)
 	

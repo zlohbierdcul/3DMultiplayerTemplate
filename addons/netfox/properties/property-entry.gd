@@ -26,7 +26,6 @@ func _to_string() -> String:
 	return _path
 
 static func parse(root: Node, path: String) -> PropertyEntry:
-	print("Parsing path: %s" % path)
 	var result = PropertyEntry.new()
 	result.node = root.get_node(NodePath(path))
 	result.property = path.erase(0, path.find(":") + 1)
