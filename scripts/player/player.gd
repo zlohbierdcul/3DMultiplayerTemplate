@@ -1,9 +1,9 @@
 class_name Player extends CharacterBody3D
 
 @export var max_speed: float = 7.0              # tune to your scale
-@export var ground_accel: float = 60.0          # higher = snappier starts/counter-strafe
-@export var air_accel: float = 15.0             # lower = more floaty
-@export var friction: float = 8.0               # higher = faster stops
+@export var ground_accel: float = 15.0          # higher = snappier starts/counter-strafe
+@export var air_accel: float = 20.0             # lower = more floaty
+@export var friction: float = 20.0               # higher = faster stops
 @export var stop_speed: float = 2.5             # minimum friction “control” speed
 @export var air_wishspeed_cap: float = 3.0      # cap wishspeed USED for air accel (not actual velocity)
 

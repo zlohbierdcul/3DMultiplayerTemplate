@@ -113,7 +113,7 @@ time/max_ticks_per_frame=12
 [physics]
 
 3d/physics_engine="Jolt Physics"
-3d/default_gravity=15.200000000000003
+3d/default_gravity=15.200000000000005
 
 [rendering]
 

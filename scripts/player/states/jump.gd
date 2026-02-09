@@ -1,6 +1,6 @@
 extends RewindableState
 
-@export var character: CharacterBody3D
+@export var character: Player
 @export var input: PlayerInput
 @export var speed = 5.0
 @export var jump_strength = 5.0
@@ -12,10 +12,7 @@ func can_enter(_previous_state):
 
 func enter(_previous_state, _tick):
 	character.velocity.y = jump_strength
-	
-func exit(next_state: RewindableState, tick: int) -> void:
-	character.velocity.x = 0.0
-	character.velocity.z = 0.0
+
 
 func tick(delta, tick, is_fresh):
 	var wishdir = character.get_wishdir(input.movement)
