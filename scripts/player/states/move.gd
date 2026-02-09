@@ -1,30 +1,33 @@
 extends RewindableState
 
-@export var character: CharacterBody3D
+@export var character: Player
 @export var input: PlayerInput
-@export var speed = 5.0
+@export var acceleration = 0.6
+
 
 func tick(delta, tick, is_fresh):
-	var input_dir = input.movement
-	var direction = (character.transform.basis * Vector3(input_dir.x, 0, input_dir.z)).normalized()
-	if direction:
-		character.velocity.x = direction.x * speed
-		character.velocity.z = direction.z * speed
-	else:
-		character.velocity.x = move_toward(character.velocity.x, 0, speed)
-		character.velocity.z = move_toward(character.velocity.z, 0, speed)
+	var input_move := input.movement
 
-	# move_and_slide assumes physics delta
-	# multiplying velocity by NetworkTime.physics_factor compensates for it
-	character.velocity *= NetworkTime.physics_factor
-	character.move_and_slide()
-	character.velocity /= NetworkTime.physics_factor
-	
-	if input.jump:
-		state_machine.transition(&"Jump")
-	elif input.run:
+	var wishdir := character.get_wishdir(input_move)
+	var wishspeed := character.get_wishspeed(input_move, character.max_speed)
+
+	if character.is_on_floor():
+		character.ground_move(wishdir, wishspeed, delta)
+	else:
+		character.air_move(wishdir, wishspeed, delta)
+
+	# Jump handling (simple version here)
+	# For “CS timing”, use jump_pressed (no auto-bhop by default).
+
+
+	character.net_move_and_slide()
+
+	# transitions
+	if input.run:
 		state_machine.transition(&"Run")
+	if input.jump_pressed:
+		state_machine.transition(&"Jump")
 	elif input.crouch:
 		state_machine.transition(&"Crouch")
-	elif input_dir == Vector3.ZERO:
+	elif input_move == Vector3.ZERO:
 		state_machine.transition(&"Idle")

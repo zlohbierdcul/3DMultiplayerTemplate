@@ -7,7 +7,8 @@ extends RewindableState
 
 # Only enter if the character is on the floor
 func can_enter(_previous_state):
-	return input.jump and character.is_on_floor()
+	var wants_jump = input.jump_pressed or (character.auto_bhop and input.jump_held)
+	return wants_jump and character.is_on_floor()
 
 func enter(_previous_state, _tick):
 	character.velocity.y = jump_strength
@@ -17,16 +18,24 @@ func exit(next_state: RewindableState, tick: int) -> void:
 	character.velocity.z = 0.0
 
 func tick(delta, tick, is_fresh):
-	var input_dir = input.movement
-	var direction = (character.transform.basis * Vector3(input_dir.x, 0, input_dir.z)).normalized()
-	character.velocity.x = lerp(character.velocity.x, direction.x * speed, delta * 3.0)
-	character.velocity.z = lerp(character.velocity.z, direction.z * speed, delta * 3.0)
+	var wishdir = character.get_wishdir(input.movement)
+	var wishspeed = character.get_wishspeed(input.movement, character.max_speed)
 
-	# move_and_slide assumes physics delta
-	# multiplying velocity by NetworkTime.physics_factor compensates for it
-	character.velocity *= NetworkTime.physics_factor
-	character.move_and_slide()
-	character.velocity /= NetworkTime.physics_factor
-	
+	# In air: air acceleration rules
 	if character.is_on_floor():
-		state_machine.transition(&"Idle")
+		# This can happen on the first jump tick (before move_and_slide makes us airborne),
+		# or if we landed during this state.
+		character.ground_move(wishdir, wishspeed, delta)
+	else:
+		character.air_move(wishdir, wishspeed, delta)
+
+	character.net_move_and_slide()
+
+	# Landed? Pick next state based on input
+	if character.is_on_floor():
+		if input.crouch:
+			state_machine.transition(&"Crouch")
+		elif input.movement != Vector3.ZERO:
+			state_machine.transition(&"Move")
+		else:
+			state_machine.transition(&"Idle")

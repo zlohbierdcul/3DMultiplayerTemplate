@@ -23,7 +23,7 @@ func tick(delta, tick, is_fresh):
 	character.move_and_slide()
 	character.velocity /= NetworkTime.physics_factor
 	
-	if input.jump:
+	if input.jump_pressed or input.jump_held:
 		state_machine.transition(&"Jump")
 	if input.crouch:
 		state_machine.transition(&"Crouch")

@@ -9,10 +9,11 @@ class_name PlayerInput extends BaseNetInput
 var movement := Vector3.ZERO
 var look_angle := Vector2.ZERO
 var mouse_rotation := Vector2.ZERO
-var jump := false
 var run := false
 var fire := false
 var crouch := false
+var jump_pressed := false
+var jump_held := false
 
 var override_mouse := false
 var is_setup := false
@@ -41,9 +42,15 @@ func _gather():
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var mx = Input.get_axis("move_left", "move_right")
 	var mz = Input.get_axis("move_forward", "move_backwards")
-	movement = Vector3(mx, 0, mz)
 
-	jump = Input.is_action_pressed("jump")
+	var v := Vector2(mx, mz)
+	if v.length() > 1.0:
+		v = v.normalized()
+
+	movement = Vector3(v.x, 0.0, v.y)
+
+	jump_pressed = Input.is_action_just_pressed("jump")
+	jump_held = Input.is_action_pressed("jump")
 	fire = Input.is_action_pressed("attack")
 	run = Input.is_action_pressed("sprint")
 	crouch = Input.is_action_pressed("crouch")

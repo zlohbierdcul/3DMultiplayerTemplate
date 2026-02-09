@@ -46,8 +46,6 @@ height = 1.8
 
 [node name="Player" type="CharacterBody3D" unique_id=1452746167 node_paths=PackedStringArray("state_machine")]
 script = ExtResource("1_3vyb7")
-air_accel = 30.0
-air_wishspeed_cap = 5.0
 state_machine = NodePath("RewindableStateMachine")
 
 [node name="Head" type="Node3D" parent="." unique_id=2096337798]
@@ -79,7 +77,7 @@ metadata/_custom_type_script = "uid://dour8fehaaugp"
 script = ExtResource("4_myrg7")
 root = NodePath("..")
 state_properties = Array[String](["RewindableStateMachine:state", ":transform", ":velocity", ":did_respawn", "Head:transform"])
-input_properties = Array[String](["Input:movement", "Input:jump_pressed", "Input:jump_held", "Input:run", "Input:fire", "Input:look_angle", "Input:crouch"])
+input_properties = Array[String](["Input:movement", "Input:jump", "Input:run", "Input:fire", "Input:look_angle", "Input:crouch"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=616799873]
@@ -156,6 +154,7 @@ metadata/_custom_type_script = "uid://usyufdtn83hc"
 script = ExtResource("9_fm80t")
 character = NodePath("../..")
 input = NodePath("../../Input")
+speed = 200.0
 metadata/_custom_type_script = "uid://usyufdtn83hc"
 
 [node name="Run" type="Node" parent="RewindableStateMachine" unique_id=310899523 node_paths=PackedStringArray("character", "input")]
