@@ -35,6 +35,8 @@ class_name Player extends CharacterBody3D
 @onready var head: Node3D = $Head
 @onready var camera: Camera3D = $Head/Camera3D
 @onready var hud: Control = $HUD
+@onready var floor_ray: RayCast3D = $FloorRay
+@onready var collision_shape: CollisionShape3D = $CollisionShape
 #endregion
 
 
@@ -72,7 +74,6 @@ func _after_tick_loop():
 func _rollback_tick(delta: float, tick: int, _is_fresh: bool) -> void:
 	check_death(tick)
 	handle_rotation()
-	apply_gravity(delta)
 #endregion
 
 
@@ -86,6 +87,9 @@ func handle_rotation() -> void:
 
 
 func handle_ground_physics(delta: float) -> void:
+	apply_gravity(delta)
+	apply_friction(delta)
+	
 	var cur_speed_in_wish_dir = velocity.dot(wish_dir)
 	var add_speed_till_cap = get_move_speed() - cur_speed_in_wish_dir
 	if add_speed_till_cap > 0:
@@ -93,13 +97,13 @@ func handle_ground_physics(delta: float) -> void:
 		accel_speed = min(accel_speed, add_speed_till_cap)
 		velocity += accel_speed * wish_dir
 		
-	apply_friction(delta)
-	apply_gravity(delta)
 	if is_multiplayer_authority():
 		handle_view_bob(delta)
 
 
 func handle_air_physics(delta: float) -> void:
+	apply_gravity(delta)
+	
 	var cur_speed_in_wish_dir = velocity.dot(wish_dir)
 	var capped_speed = min((air_speed * wish_dir).length(), air_cap)
 	var add_speed_till_cap = capped_speed - cur_speed_in_wish_dir
@@ -108,8 +112,7 @@ func handle_air_physics(delta: float) -> void:
 		accel_speed = min(accel_speed, add_speed_till_cap)
 		velocity += accel_speed * wish_dir
 	
-	apply_gravity(delta)
-	
+	# Strafing
 	if is_on_wall():
 		if is_surface_too_steep(get_wall_normal()):
 			motion_mode = CharacterBody3D.MOTION_MODE_FLOATING
@@ -206,6 +209,11 @@ func net_move_and_slide() -> void:
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
 	velocity /= NetworkTime.physics_factor
+
+
+func get_jump_height() -> float:
+	if not floor_ray.is_colliding(): return 0.0
+	return (position.y - collision_shape.shape.height / 2) - floor_ray.get_collision_point().y
 
 
 func get_player_id() -> int:

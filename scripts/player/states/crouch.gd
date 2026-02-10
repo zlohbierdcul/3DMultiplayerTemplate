@@ -28,7 +28,5 @@ func tick(delta, tick, is_fresh):
 	
 	if input.jump_pressed or input.jump_held:
 		state_machine.transition(&"Jump")
-	#elif input.run:
-		#state_machine.transition(&"Run")
 	elif not input.crouch:
 		state_machine.transition(&"Idle")

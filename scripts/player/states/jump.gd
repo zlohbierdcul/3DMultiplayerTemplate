@@ -7,6 +7,7 @@ extends RewindableState
 # Only enter if the character is on the floor
 func can_enter(_previous_state):
 	var wants_jump = input.jump_pressed or (character.auto_bhop and input.jump_held)
+	character.force_update_is_on_floor()
 	return wants_jump and character.is_on_floor()
 
 func enter(_previous_state, _tick):

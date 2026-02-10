@@ -49,7 +49,7 @@ height = 1.8
 script = ExtResource("1_3vyb7")
 state_machine = NodePath("RewindableStateMachine")
 gun = NodePath("Head/Camera3D/NetworkGun")
-jump_velocity = 8.0
+jump_velocity = 7.0
 auto_bhop = true
 ground_accel = 10.0
 ground_decel = 8.0
@@ -144,3 +144,6 @@ script = ExtResource("12_fm80t")
 character = NodePath("../..")
 input = NodePath("../../Input")
 metadata/_custom_type_script = "uid://usyufdtn83hc"
+
+[node name="FloorRay" type="RayCast3D" parent="." unique_id=2089820090]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)

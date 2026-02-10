@@ -14,6 +14,7 @@ func tick(delta, tick, is_fresh):
 	character.wish_dir = lerp(character.wish_dir, Vector3.ZERO, delta * 30.0)
 	
 	if tick != _jump_tick:
+		#character.force_update_is_on_floor()
 		if (character.is_on_floor()):
 			character.handle_ground_physics(delta)
 		else:
@@ -22,6 +23,7 @@ func tick(delta, tick, is_fresh):
 		character.net_move_and_slide()
 	
 	var wants_jump := input.jump_pressed or (character.auto_bhop and input.jump_held)
+	character.force_update_is_on_floor()
 	if wants_jump and character.is_on_floor():
 		state_machine.transition(&"Jump")
 	elif input.movement != Vector3.ZERO:

@@ -4,6 +4,7 @@ extends RewindableState
 @export var input: PlayerInput
 
 func can_enter(previous_state: RewindableState) -> bool:
+	character.force_update_is_on_floor()
 	return input.run and character.is_on_floor()
 
 func tick(delta, tick, is_fresh):
