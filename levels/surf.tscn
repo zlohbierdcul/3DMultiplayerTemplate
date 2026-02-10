@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://dooclgnemjef4"]
+
+[ext_resource type="Texture2D" uid="uid://30npjx1gsbxa" path="res://assets/textures/prototype/Grey.png" id="1_jvkf1"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cbevo"]
+albedo_texture = ExtResource("1_jvkf1")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[node name="Surf" type="CSGCombiner3D" unique_id=486706436]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=245104895]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+size = Vector3(100, 1, 100)
+material = SubResource("StandardMaterial3D_cbevo")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="." unique_id=1808101389]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0.002500534, 5.0870543, -26.260002)
+size = Vector3(7, 1, 23)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="." unique_id=1794282568]
+transform = Transform3D(0.6427876, -0.7660444, 0, 0.7660444, 0.6427876, 0, 0, 0, 1, -4.759219, 5.8183374, 17.222223)
+size = Vector3(14, 0.2, 62)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="." unique_id=315392613]
+transform = Transform3D(0.6427876, 0.7660444, 0, -0.7660444, 0.6427876, 0, 0, 0, 1, 4.240781, 5.8183374, 17.222223)
+size = Vector3(14, 0.2, 62)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="." unique_id=2028125891]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.002500534, 10.778676, -13.984912)
+size = Vector3(7, 1, 5.1296387)

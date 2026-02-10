@@ -6,20 +6,12 @@ extends RewindableState
 
 
 func tick(delta, tick, is_fresh):
-	var input_move := input.movement
-
-	var wishdir := character.get_wishdir(input_move)
-	var wishspeed := character.get_wishspeed(input_move, character.max_speed)
-
-	if character.is_on_floor():
-		character.ground_move(wishdir, wishspeed, delta)
+	character.wish_dir = character.global_transform.basis * input.movement
+	if (character.is_on_floor()):
+		character.handle_ground_physics(delta)
 	else:
-		character.air_move(wishdir, wishspeed, delta)
-
-	# Jump handling (simple version here)
-	# For “CS timing”, use jump_pressed (no auto-bhop by default).
-
-
+		character.handle_air_physics(delta)
+	
 	character.net_move_and_slide()
 
 	# transitions
@@ -29,5 +21,5 @@ func tick(delta, tick, is_fresh):
 		state_machine.transition(&"Jump")
 	elif input.crouch:
 		state_machine.transition(&"Crouch")
-	elif input_move == Vector3.ZERO:
+	elif input.movement == Vector3.ZERO:
 		state_machine.transition(&"Idle")

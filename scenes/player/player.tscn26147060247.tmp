@@ -1,0 +1,187 @@
+[gd_scene format=3 uid="uid://bg6ikm62en6qv"]
+
+[ext_resource type="Script" uid="uid://eowj23ka10u2" path="res://scripts/player/player.gd" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://b350k10ubpp00" path="res://scenes/player/camera.gd" id="2_gx1jg"]
+[ext_resource type="PackedScene" uid="uid://bqk6wsgw21yeb" path="res://scenes/gun/network_gun.tscn" id="2_myrg7"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="3_myrg7"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="4_myrg7"]
+[ext_resource type="Script" uid="uid://byrgwv2o7hstx" path="res://addons/netfox.extras/state-machine/rewindable-state-machine.gd" id="7_qek5x"]
+[ext_resource type="Script" uid="uid://b2hb1xy2waaos" path="res://scripts/player/states/idle.gd" id="8_je7p5"]
+[ext_resource type="Script" uid="uid://dlgjj6yljwkg0" path="res://scripts/player/states/move.gd" id="9_fm80t"]
+[ext_resource type="Script" uid="uid://7qgw01x5lw8p" path="res://scripts/player/states/run.gd" id="10_gx1jg"]
+[ext_resource type="Script" uid="uid://bewbcpd8kqgrw" path="res://scripts/player/player_input.gd" id="10_h17s1"]
+[ext_resource type="Script" uid="uid://6pf8fqun616x" path="res://scripts/player/states/jump.gd" id="11_ugbui"]
+[ext_resource type="Script" uid="uid://bnrdj3kge78b5" path="res://scripts/player/states/crouch.gd" id="12_fm80t"]
+[ext_resource type="Texture2D" uid="uid://dnm4qvou8cofh" path="res://assets/player/crosshair.png" id="13_gx1jg"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0owmy"]
+albedo_color = Color(0.029506557, 0.029506557, 0.029506557, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qek5x"]
+material = SubResource("StandardMaterial3D_0owmy")
+size = Vector3(0.2, 0.2, 0.75)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_75vfm"]
+albedo_color = Color(0.19793725, 0.19793722, 0.19793722, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fm80t"]
+material = SubResource("StandardMaterial3D_75vfm")
+size = Vector3(0.445, 0.235, 0.23)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5gtgg"]
+properties/0/path = NodePath(".:health")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:death_tick")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:respawn_position")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_u8vuu"]
+height = 1.8
+
+[node name="Player" type="CharacterBody3D" unique_id=1452746167 node_paths=PackedStringArray("state_machine", "gun")]
+script = ExtResource("1_3vyb7")
+state_machine = NodePath("RewindableStateMachine")
+gun = NodePath("Head/Camera3D/NetworkGun")
+jump_velocity = 8.0
+auto_bhop = true
+ground_accel = 10.0
+ground_decel = 8.0
+ground_friction = 4.0
+headbob_amp = 0.4
+headbob_freq = 0.28
+
+[node name="Head" type="Node3D" parent="." unique_id=2096337798]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5568102, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Head" unique_id=1953381354]
+script = ExtResource("2_gx1jg")
+
+[node name="NetworkGun" parent="Head/Camera3D" unique_id=855387136 node_paths=PackedStringArray("input", "gun", "camera") instance=ExtResource("2_myrg7")]
+input = NodePath("../../../Input")
+gun = NodePath("../../BigGun/MeshInstance3D")
+camera = NodePath("..")
+
+[node name="BigGun" type="Node3D" parent="Head" unique_id=987308342]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Head/BigGun" unique_id=1141172475]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.47947, -0.3280391, -0.17253748)
+mesh = SubResource("BoxMesh_qek5x")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Head" unique_id=937778310]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 2.6261845, 0, 0, -0.21642604)
+mesh = SubResource("BoxMesh_fm80t")
+
+[node name="TickInterpolator" type="Node" parent="." unique_id=291797288 node_paths=PackedStringArray("root")]
+script = ExtResource("3_myrg7")
+root = NodePath("..")
+properties = Array[String]([":transform", "Head:transform"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
+
+[node name="RollbackSynchronizer" type="Node" parent="." unique_id=1254284330 node_paths=PackedStringArray("root")]
+script = ExtResource("4_myrg7")
+root = NodePath("..")
+state_properties = Array[String](["RewindableStateMachine:state", ":transform", ":velocity", ":did_respawn", "Head:transform", "Head/Camera3D:transform"])
+input_properties = Array[String](["Input:movement", "Input:jump_pressed", "Input:jump_held", "Input:run", "Input:fire", "Input:look_angle", "Input:crouch"])
+metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=616799873]
+replication_config = SubResource("SceneReplicationConfig_5gtgg")
+
+[node name="Input" type="Node" parent="." unique_id=1500758025 node_paths=PackedStringArray("big_arm", "hud")]
+script = ExtResource("10_h17s1")
+mouse_sensitivity = 0.5
+big_arm = NodePath("../Head/BigGun")
+hud = NodePath("../HUD")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1214498127]
+shape = SubResource("CapsuleShape3D_u8vuu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=362274908]
+mesh = SubResource("CapsuleMesh_u8vuu")
+
+[node name="HUD" type="Control" parent="." unique_id=1847292927]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StateLabel" type="Label" parent="HUD" unique_id=35562684]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 9.0
+offset_right = 51.0
+offset_bottom = 32.0
+
+[node name="CenterContainer" type="CenterContainer" parent="HUD" unique_id=2117352095]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Crosshair" type="TextureRect" parent="HUD/CenterContainer" unique_id=1078565309]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("13_gx1jg")
+expand_mode = 1
+
+[node name="HealthBar" type="ProgressBar" parent="HUD" unique_id=1844825995]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -267.0
+offset_top = -51.0
+offset_right = -11.0
+offset_bottom = -11.0
+grow_horizontal = 0
+grow_vertical = 0
+fill_mode = 1
+show_percentage = false
+
+[node name="RewindableStateMachine" type="Node" parent="." unique_id=1093270710]
+script = ExtResource("7_qek5x")
+metadata/_custom_type_script = "uid://byrgwv2o7hstx"
+
+[node name="Idle" type="Node" parent="RewindableStateMachine" unique_id=1433160090 node_paths=PackedStringArray("character", "input")]
+script = ExtResource("8_je7p5")
+character = NodePath("../..")
+input = NodePath("../../Input")
+metadata/_custom_type_script = "uid://usyufdtn83hc"
+
+[node name="Move" type="Node" parent="RewindableStateMachine" unique_id=482690641 node_paths=PackedStringArray("character", "input")]
+script = ExtResource("9_fm80t")
+character = NodePath("../..")
+input = NodePath("../../Input")
+metadata/_custom_type_script = "uid://usyufdtn83hc"
+
+[node name="Run" type="Node" parent="RewindableStateMachine" unique_id=310899523 node_paths=PackedStringArray("character", "input")]
+script = ExtResource("10_gx1jg")
+character = NodePath("../..")
+input = NodePath("../../Input")
+metadata/_custom_type_script = "uid://usyufdtn83hc"
+
+[node name="Jump" type="Node" parent="RewindableStateMachine" unique_id=5370246 node_paths=PackedStringArray("character", "input", "camera")]
+script = ExtResource("11_ugbui")
+character = NodePath("../..")
+input = NodePath("../../Input")
+camera = NodePath("../../Head/Camera3D")
+metadata/_custom_type_script = "uid://usyufdtn83hc"
+
+[node name="Crouch" type="Node" parent="RewindableStateMachine" unique_id=1904781283 node_paths=PackedStringArray("character", "input")]
+script = ExtResource("12_fm80t")
+character = NodePath("../..")
+input = NodePath("../../Input")
+metadata/_custom_type_script = "uid://usyufdtn83hc"

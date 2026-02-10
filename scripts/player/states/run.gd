@@ -1,31 +1,20 @@
 extends RewindableState
 
-@export var character: CharacterBody3D
+@export var character: Player
 @export var input: PlayerInput
-@export var speed = 5.0
 
 func can_enter(previous_state: RewindableState) -> bool:
 	return input.run and character.is_on_floor()
 
 func tick(delta, tick, is_fresh):
-	var input_dir = input.movement
-	var direction = (character.transform.basis * Vector3(input_dir.x, 0, input_dir.z)).normalized()
-	if direction:
-		character.velocity.x = direction.x * speed
-		character.velocity.z = direction.z * speed
-	else:
-		character.velocity.x = move_toward(character.velocity.x, 0, speed)
-		character.velocity.z = move_toward(character.velocity.z, 0, speed)
-
-	# move_and_slide assumes physics delta
-	# multiplying velocity by NetworkTime.physics_factor compensates for it
-	character.velocity *= NetworkTime.physics_factor
-	character.move_and_slide()
-	character.velocity /= NetworkTime.physics_factor
+	character.wish_dir = character.global_transform.basis * input.movement
+	character.handle_ground_physics(delta)
+	
+	character.net_move_and_slide()
 	
 	if input.jump_pressed or input.jump_held:
 		state_machine.transition(&"Jump")
 	if input.crouch:
 		state_machine.transition(&"Crouch")
-	elif input_dir == Vector3.ZERO:
+	elif input.movement == Vector3.ZERO:
 		state_machine.transition(&"Idle")

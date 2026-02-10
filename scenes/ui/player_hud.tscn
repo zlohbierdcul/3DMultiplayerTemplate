@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://dqg6cao2nsl00"]
+
+[ext_resource type="Script" uid="uid://oo6aj4vvmbyi" path="res://scripts/ui/player_hud.gd" id="1_31ty4"]
+[ext_resource type="Texture2D" uid="uid://dnm4qvou8cofh" path="res://assets/player/crosshair.png" id="1_e6e0b"]
+[ext_resource type="PackedScene" uid="uid://bq43rdhnm8q13" path="res://scenes/ui/debug_hud.tscn" id="2_u16pa"]
+
+[node name="HUD" type="Control" unique_id=801098267]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_31ty4")
+
+[node name="Debug" parent="." unique_id=908439000 instance=ExtResource("2_u16pa")]
+visible = false
+layout_mode = 0
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1035034495]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Crosshair" type="TextureRect" parent="CenterContainer" unique_id=1993221517]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("1_e6e0b")
+expand_mode = 1
+
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=1519401827]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -267.0
+offset_top = -51.0
+offset_right = -11.0
+offset_bottom = -11.0
+grow_horizontal = 0
+grow_vertical = 0
+fill_mode = 1
+show_percentage = false

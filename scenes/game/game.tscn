@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://ci6ax4vuptjjr" path="res://levels/aim_lego.tscn" id="1_0sr1o"]
 [ext_resource type="Script" uid="uid://bvy3twysr1nvc" path="res://scripts/game/player_spawner.gd" id="2_7h61r"]
+[ext_resource type="PackedScene" uid="uid://dooclgnemjef4" path="res://levels/surf.tscn" id="2_kelw5"]
 [ext_resource type="PackedScene" uid="uid://bg6ikm62en6qv" path="res://scenes/player/player.tscn" id="3_0sr1o"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sul5r"]
@@ -31,6 +32,10 @@ shadow_enabled = true
 [node name="Map" type="Node" parent="." unique_id=530805541]
 
 [node name="AimLego" parent="Map" unique_id=1510654233 instance=ExtResource("1_0sr1o")]
+visible = false
+use_collision = false
+
+[node name="Surf" parent="Map" unique_id=486706436 instance=ExtResource("2_kelw5")]
 
 [node name="SpawnMarker" type="Node" parent="." unique_id=1658489978]
 
